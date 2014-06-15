@@ -2,7 +2,12 @@
 #define RAPID_CXX_TEST_UNIT_TEST_HPP
 
 // the namespace
-namespace rapid_cxx_test { }
+namespace rapid_cxx_test {
+	struct test_result {
+		char *name;
+		char *message;
+	}
+}
 
 # define TEST_SUITE(Name)
 # define TEST_SUITE_END()
