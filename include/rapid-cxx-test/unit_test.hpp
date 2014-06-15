@@ -17,4 +17,9 @@ namespace rabid_cxx_test { }
 # define TEST_NO_THROW(...)
 # define TEST_THROWS(Except, ...)
 
+# define AT_RTIME_EQ(x, y) \
+	do {\
+		if (x != y) {exit(1);}\
+	} while (0)
+
 #endif /* RAPID_CXX_TEST_UNIT_TEST_HPP */
