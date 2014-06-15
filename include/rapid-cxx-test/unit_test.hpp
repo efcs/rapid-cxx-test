@@ -2,7 +2,7 @@
 #define RAPID_CXX_TEST_UNIT_TEST_HPP
 
 // the namespace
-namespace rabid_cxx_test { }
+namespace rapid_cxx_test { }
 
 # define TEST_SUITE(Name)
 # define TEST_SUITE_END()
