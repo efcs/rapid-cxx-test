@@ -18,7 +18,6 @@
 #   define TEST_FUNC_NAME() __func__
 # endif
 
-
 ////////////////////////////////////////////////////////////////////////////////
 //                          TEST_SUITE
 ////////////////////////////////////////////////////////////////////////////////
@@ -32,7 +31,7 @@ int main(int argc, char **argv)                                     \
     return Name::unit_test_main(argc, argv);                        \
 }                                                                   \
 namespace Name                                                      \
-{                                                                   \
+{ /* namespace closed in TEST_SUITE_END */                          \
     inline ::rapid_cxx_test::test_suite & get_test_suite() noexcept \
     {                                                               \
         static ::rapid_cxx_test::test_suite m_suite(#Name);         \
@@ -49,7 +48,7 @@ namespace Name                                                      \
         ::rapid_cxx_test::test_runner runner(get_test_suite()); \
         return runner.run();                                    \
     }                                                           \
-} /* namespace TestSuite */
+} /* namespace opened in TEST_SUITE(...) */
 # 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -70,11 +69,12 @@ namespace Name                                                      \
     void Name()
 # 
 
-////////////////////////////////////////////////////////////////////////////////
-//                         ASSERTIONS
-////////////////////////////////////////////////////////////////////////////////
+
 # define TEST_SET_CHECKPOINT() ::rapid_cxx_test::set_checkpoint(__FILE__, TEST_FUNC_NAME(), __LINE__)
 
+////////////////////////////////////////////////////////////////////////////////
+//                              TEST_UNSUPPORTED
+////////////////////////////////////////////////////////////////////////////////
 # define TEST_UNSUPPORTED()                                                                 \
     do {                                                                                    \
         TEST_SET_CHECKPOINT();                                                              \
@@ -87,6 +87,10 @@ namespace Name                                                      \
     } while (false)
 # 
 
+
+////////////////////////////////////////////////////////////////////////////////
+//                            BASIC ASSERTIONS
+////////////////////////////////////////////////////////////////////////////////
 # define TEST_WARN(...)                                                        \
     do {                                                                       \
         TEST_SET_CHECKPOINT();                                                 \
@@ -149,8 +153,9 @@ namespace Name                                                      \
     } while (false)
 # 
 
-# define TEST_STATIC_ASSERT(...) static_assert(__VA_ARGS__, #__VA_ARGS__)
-
+////////////////////////////////////////////////////////////////////////////////
+//                    TEST_WARN_NO_THROW / TEST_WARN_THROWS
+////////////////////////////////////////////////////////////////////////////////
 # define TEST_WARN_NO_THROW(...)                                                       \
     do {                                                                               \
         TEST_SET_CHECKPOINT();                                                         \
@@ -182,7 +187,9 @@ namespace Name                                                      \
     } while (false)
 # 
 
-
+////////////////////////////////////////////////////////////////////////////////
+//                    TEST_CHECK_NO_THROW / TEST_CHECK_THROWS
+////////////////////////////////////////////////////////////////////////////////
 # define TEST_CHECK_NO_THROW(...)                                                      \
     do {                                                                               \
         TEST_SET_CHECKPOINT();                                                         \
@@ -215,6 +222,9 @@ namespace Name                                                      \
 # 
 
 
+////////////////////////////////////////////////////////////////////////////////
+//                    TEST_REQUIRE_NO_THROW / TEST_REQUIRE_THROWs
+////////////////////////////////////////////////////////////////////////////////
 # define TEST_REQUIRE_NO_THROW(...)                                                    \
     do {                                                                               \
         TEST_SET_CHECKPOINT();                                                         \
@@ -252,7 +262,9 @@ namespace Name                                                      \
     } while (false)
 # 
 
-
+////////////////////////////////////////////////////////////////////////////////
+//                    TEST_ASSERT_NO_THROW / TEST_ASSERT_THROWS
+////////////////////////////////////////////////////////////////////////////////
 # define TEST_ASSERT_NO_THROW(...)                                                     \
     do {                                                                               \
         TEST_SET_CHECKPOINT();                                                         \
@@ -291,6 +303,14 @@ namespace Name                                                      \
     } while (false)
 #
 
+////////////////////////////////////////////////////////////////////////////////
+//                            TEST_STATIC_ASSERT
+////////////////////////////////////////////////////////////////////////////////
+# define TEST_STATIC_ASSERT(...) static_assert(__VA_ARGS__, #__VA_ARGS__)
+
+////////////////////////////////////////////////////////////////////////////////
+//                      TEST_SAME_TYPE/TEST_NOT_SAME_TYPE
+////////////////////////////////////////////////////////////////////////////////
 # define TEST_SAME_TYPE(...) \
     static_assert(::rapid_cxx_test::detail::is_same<__VA_ARGS__>::value, "is_same<" #__VA_ARGS__ ">::value")
 # 
@@ -353,6 +373,7 @@ namespace rapid_cxx_test
         }
     }
     
+    ////////////////////////////////////////////////////////////////////////////
     inline void set_checkpoint(const char* file, const char* func, std::size_t line) noexcept
     {
         auto & cp = detail::global_checkpoint();
@@ -361,6 +382,7 @@ namespace rapid_cxx_test
         cp.line = line;
     }
     
+    ////////////////////////////////////////////////////////////////////////////
     inline checkpoint const & get_checkpoint() noexcept
     {
         return detail::global_checkpoint();
@@ -410,6 +432,8 @@ namespace rapid_cxx_test
         
     private:
         const char* m_name;
+        // Since fast compile times in a priority, we use simple containers
+        // with hard limits.
         test_case m_tests[test_case_max];
         std::size_t m_size;
     };
@@ -444,40 +468,44 @@ namespace rapid_cxx_test
             }
         }
         
+        // Each assertion and failure is reported through this function.
         void report(test_outcome o) noexcept
         {
             ++m_assertions;
-            if (o.type == failure_type::none) {
-                return;
-            }
-            else if (o.type == failure_type::unsupported) {
+            
+            switch (o.type)
+            {
+            case failure_type::none:
+                break;
+            case failure_type::unsupported:
                 ++m_unsupported;
                 m_failure = o;
-            }
-            else if (o.type == failure_type::warn) {
+                break;
+            case failure_type::warn:
                 ++m_warning_failures;
                 report_error(o);
-            }
-            else if (o.type == failure_type::check) {
+                break;
+            case failure_type::check:
                 ++m_check_failures;
                 report_error(o);
                 m_failure = o;
-            }
-            else if (o.type ==  failure_type::require) {
+                break;
+            case failure_type::require:
                 ++m_require_failures;
                 report_error(o);
                 m_failure = o;
-            }
-            else if (o.type == failure_type::assert) {
+                break;
+            case failure_type::assert:
                 report_error(o);
-                m_failure = o;
-            }
-            else if (o.type == failure_type::uncaught_exception) {
+                break;
+            case failure_type::uncaught_exception:
                 std::fprintf(stderr
-                  , "TEST CASE FAILED WITH UNCAUGHT EXCEPTION:\n    last checkpoint near %s:%u %s\n\n"
-                  , o.file, (int)o.line, o.func
-                  );
+                    , "Test case FAILED with uncaught exception:\n"
+                        "    last checkpoint near %s:%lu %s\n\n"
+                    , o.file, o.line, o.func
+                    );
                 m_failure = o;
+                break;
             }
         }
         
@@ -525,6 +553,7 @@ namespace rapid_cxx_test
         { return m_check_failures + m_require_failures; }
         
         
+        // Print a summary of what was run and the outcome.
         void print_summary(const char* suitename) const noexcept
         {
             auto out = failure_count() ? stderr : stdout;
@@ -543,14 +572,18 @@ namespace rapid_cxx_test
         }
         
     private:
+        // counts of testcases, failed testcases, and unsupported testcases.
         std::size_t m_testcases{};
         std::size_t m_testcase_failures{};
         std::size_t m_unsupported{};
+        
+        // counts of assertions and assertion failures.
         std::size_t m_assertions{};
         std::size_t m_warning_failures{};
         std::size_t m_check_failures{};
         std::size_t m_require_failures{};
     
+        // The last failure. This is cleared between testcases.
         test_outcome m_failure{failure_type::none, "", "", 0, "", ""};
     };
     
