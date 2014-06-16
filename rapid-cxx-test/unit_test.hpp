@@ -2,7 +2,7 @@
 #define RAPID_CXX_TEST_UNIT_TEST_HPP
 
 # include "common.hpp"
-# include "log.hpp"
+# include "observer.hpp"
 # include "runner.hpp"
 
 
@@ -24,7 +24,7 @@ namespace Name                                                      \
     {                                                               \
         static ::rapid_cxx_test::test_suite m_suite(#Name);         \
         return m_suite;                                             \
-    }                                                               \
+    }
 # 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -54,7 +54,7 @@ namespace Name                                                      \
     RAPID_CXX_TEST_PP_CAT(rapid_cxx_test_registrar_, __LINE__)(                                         \
         get_test_suite()                                                                                \
       , ::rapid_cxx_test::test_case{__FILE__, #Name, __LINE__, & RAPID_CXX_TEST_PP_CAT(Name, _invoker)} \
-      )                                                                                                 \
+      );                                                                                                \
     void Name()
 # 
 

@@ -16,7 +16,6 @@ namespace rapid_cxx_test
     class test_runner;
     class test_observer;
     
-    
     constexpr std::size_t test_case_max = 256;
     
     using invoker_t = void(*)();
