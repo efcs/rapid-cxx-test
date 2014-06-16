@@ -6,11 +6,6 @@
 # include <cstdio>
 # include <cassert>
 
-# if defined(__clang__)
-#   pragma clang diagnostic push
-#   pragma clang diagnostic ignored "-Wglobal-constructors"
-# endif
-
 # define RAPID_CXX_TEST_PP_CAT(x, y) RAPID_CXX_TEST_PP_CAT_2(x, y)
 # define RAPID_CXX_TEST_PP_CAT_2(x, y) x##y
 
@@ -60,6 +55,8 @@ namespace Name                                                      \
 //                          TEST_CASE
 ////////////////////////////////////////////////////////////////////////////////
 
+# if !defined(__clang__)
+#   
 # define TEST_CASE(Name)                                                                                \
     void Name();                                                                                        \
     static void RAPID_CXX_TEST_PP_CAT(Name, _invoker)()                                                 \
@@ -72,7 +69,26 @@ namespace Name                                                      \
       , ::rapid_cxx_test::test_case{__FILE__, #Name, __LINE__, & RAPID_CXX_TEST_PP_CAT(Name, _invoker)} \
       );                                                                                                \
     void Name()
-# 
+#
+# else /* __clang__ */
+#   
+# define TEST_CASE(Name)                                                                                \
+    void Name();                                                                                        \
+    static void RAPID_CXX_TEST_PP_CAT(Name, _invoker)()                                                 \
+    {                                                                                                   \
+        Name();                                                                                         \
+    }                                                                                                   \
+    _Pragma("clang diagnostic push")                                                                    \
+    _Pragma("clang diagnostic ignored \"-Wglobal-constructors\"")                                       \
+    static ::rapid_cxx_test::registrar                                                                  \
+    RAPID_CXX_TEST_PP_CAT(rapid_cxx_test_registrar_, __LINE__)(                                         \
+        get_test_suite()                                                                                \
+      , ::rapid_cxx_test::test_case{__FILE__, #Name, __LINE__, & RAPID_CXX_TEST_PP_CAT(Name, _invoker)} \
+      );                                                                                                \
+    _Pragma("clang diagnostic pop")                                                                     \
+    void Name()
+#
+# endif /* !defined(__clang__) */
 
 
 # define TEST_SET_CHECKPOINT() ::rapid_cxx_test::set_checkpoint(__FILE__, TEST_FUNC_NAME(), __LINE__)
@@ -742,7 +758,4 @@ namespace rapid_cxx_test
     
 }                                                    // namespace rapid_cxx_test
 
-# if defined(__clang__)
-#   pragma clang diagnostic pop
-# endif
 #endif /* RAPID_CXX_TEST_HPP */
