@@ -154,7 +154,7 @@ namespace Name                                                      \
 # 
 
 ////////////////////////////////////////////////////////////////////////////////
-//                    TEST_WARN_NO_THROW / TEST_WARN_THROWS
+//                    TEST_WARN_NO_THROW / TEST_WARN_THROW
 ////////////////////////////////////////////////////////////////////////////////
 # define TEST_WARN_NO_THROW(...)                                                       \
     do {                                                                               \
@@ -172,12 +172,12 @@ namespace Name                                                      \
     } while (false)
 # 
 
-# define TEST_WARN_THROWS(Except, ...)                                                 \
+# define TEST_WARN_THROW(Except, ...)                                                 \
     do {                                                                               \
         TEST_SET_CHECKPOINT();                                                         \
         ::rapid_cxx_test::test_outcome m_f{                                            \
             ::rapid_cxx_test::failure_type::none, __FILE__, TEST_FUNC_NAME(), __LINE__ \
-            , "TEST_WARN_THROWS(" #Except "," #__VA_ARGS__ ")", ""                     \
+            , "TEST_WARN_THROW(" #Except "," #__VA_ARGS__ ")", ""                     \
             };                                                                         \
         try {                                                                          \
             (__VA_ARGS__);                                                             \
@@ -188,7 +188,7 @@ namespace Name                                                      \
 # 
 
 ////////////////////////////////////////////////////////////////////////////////
-//                    TEST_CHECK_NO_THROW / TEST_CHECK_THROWS
+//                    TEST_CHECK_NO_THROW / TEST_CHECK_THROW
 ////////////////////////////////////////////////////////////////////////////////
 # define TEST_CHECK_NO_THROW(...)                                                      \
     do {                                                                               \
@@ -206,12 +206,12 @@ namespace Name                                                      \
     } while (false)
 #
 
-# define TEST_CHECK_THROWS(Except, ...)                                                \
+# define TEST_CHECK_THROW(Except, ...)                                                \
     do {                                                                               \
         TEST_SET_CHECKPOINT();                                                         \
         ::rapid_cxx_test::test_outcome m_f{                                            \
             ::rapid_cxx_test::failure_type::none, __FILE__, TEST_FUNC_NAME(), __LINE__ \
-            , "TEST_CHECK_THROWS(" #Except "," #__VA_ARGS__ ")", ""                    \
+            , "TEST_CHECK_THROW(" #Except "," #__VA_ARGS__ ")", ""                    \
             };                                                                         \
         try {                                                                          \
             (__VA_ARGS__);                                                             \
@@ -244,12 +244,12 @@ namespace Name                                                      \
     } while (false)
 #
 
-# define TEST_REQUIRE_THROWS(Except, ...)                                              \
+# define TEST_REQUIRE_THROW(Except, ...)                                              \
     do {                                                                               \
         TEST_SET_CHECKPOINT();                                                         \
         ::rapid_cxx_test::test_outcome m_f{                                            \
             ::rapid_cxx_test::failure_type::none, __FILE__, TEST_FUNC_NAME(), __LINE__ \
-            , "TEST_REQUIRE_THROWS(" #Except "," #__VA_ARGS__ ")", ""                  \
+            , "TEST_REQUIRE_THROW(" #Except "," #__VA_ARGS__ ")", ""                  \
             };                                                                         \
         try {                                                                          \
             (__VA_ARGS__);                                                             \
@@ -263,7 +263,7 @@ namespace Name                                                      \
 # 
 
 ////////////////////////////////////////////////////////////////////////////////
-//                    TEST_ASSERT_NO_THROW / TEST_ASSERT_THROWS
+//                    TEST_ASSERT_NO_THROW / TEST_ASSERT_THROW
 ////////////////////////////////////////////////////////////////////////////////
 # define TEST_ASSERT_NO_THROW(...)                                                     \
     do {                                                                               \
@@ -285,12 +285,12 @@ namespace Name                                                      \
 #
 
 
-# define TEST_ASSERT_THROWS(Except, ...)                                               \
+# define TEST_ASSERT_THROW(Except, ...)                                               \
     do {                                                                               \
         TEST_SET_CHECKPOINT();                                                         \
         ::rapid_cxx_test::test_outcome m_f{                                            \
             ::rapid_cxx_test::failure_type::none, __FILE__, TEST_FUNC_NAME(), __LINE__ \
-            , "TEST_ASSERT_THROWS(" #Except "," #__VA_ARGS__ ")", ""                   \
+            , "TEST_ASSERT_THROW(" #Except "," #__VA_ARGS__ ")", ""                   \
             };                                                                         \
         try {                                                                          \
             (__VA_ARGS__);                                                             \

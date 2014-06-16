@@ -15,10 +15,10 @@ TEST_CASE(all_pass_test)
     TEST_REQUIRE_NO_THROW(false);
     TEST_ASSERT_NO_THROW(false);
     
-    TEST_WARN_THROWS(int, throw 0);
-    TEST_CHECK_THROWS(int, throw 0);
-    TEST_REQUIRE_THROWS(int, throw 0);
-    TEST_ASSERT_THROWS(int, throw 0);
+    TEST_WARN_THROW(int, throw 0);
+    TEST_CHECK_THROW(int, throw 0);
+    TEST_REQUIRE_THROW(int, throw 0);
+    TEST_ASSERT_THROW(int, throw 0);
     
     TEST_STATIC_ASSERT(true);
     TEST_SAME_TYPE(int, int);
@@ -29,14 +29,14 @@ TEST_CASE(warn_fail_test)
 {
     TEST_WARN(false);
     TEST_WARN_NO_THROW(throw 0);
-    TEST_WARN_THROWS(int, ((void)0));
+    TEST_WARN_THROW(int, ((void)0));
 }
 
 TEST_CASE(check_fail_test)
 {
     TEST_CHECK(false);
     TEST_CHECK_NO_THROW(throw 0);
-    TEST_CHECK_THROWS(int, ((void)0));
+    TEST_CHECK_THROW(int, ((void)0));
 }
 
 TEST_CASE(require_fail_test)
