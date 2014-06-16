@@ -20,7 +20,13 @@ namespace rapid_cxx_test
         test_runner operator=(test_runner const &) = delete;
         
     public:
-        int run();
+        int run()
+        {
+            for (auto & tc : m_ts) {
+                tc.invoke();
+            }
+            return 0;
+        }
         
     private:
         test_suite m_ts;
