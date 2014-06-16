@@ -34,7 +34,7 @@ namespace Name                                                      \
     int unit_test_main(int, char**)                             \
     {                                                           \
         ::rapid_cxx_test::test_runner runner(get_test_suite()); \
-        runner.run();                                           \
+        return runner.run();                                    \
     }                                                           \
 } /* namespace TestSuite */
 # 
