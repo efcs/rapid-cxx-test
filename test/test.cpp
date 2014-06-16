@@ -57,4 +57,9 @@ TEST_CASE(same_type_test)
     TEST_NOT_SAME_TYPE(int, int &);
 }
 
+TEST_CASE(unsupported_two)
+{
+    TEST_UNSUPPORTED();
+}
+
 TEST_SUITE_END()

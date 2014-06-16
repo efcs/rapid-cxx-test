@@ -454,6 +454,9 @@ namespace rapid_cxx_test
     public:
         test_reporter() {}
         
+        test_reporter(test_reporter const &) = delete;
+        test_reporter const & operator=(test_reporter const &) = delete; 
+        
         void test_case_begin()
         {
             ++m_testcases;
@@ -501,7 +504,7 @@ namespace rapid_cxx_test
             case failure_type::uncaught_exception:
                 std::fprintf(stderr
                     , "Test case FAILED with uncaught exception:\n"
-                        "    last checkpoint near %s:%lu %s\n\n"
+                      "    last checkpoint near %s::%lu %s\n\n"
                     , o.file, o.line, o.func
                     );
                 m_failure = o;
@@ -558,9 +561,9 @@ namespace rapid_cxx_test
         {
             auto out = failure_count() ? stderr : stdout;
             std::fprintf(out, "Summary for testsuite %s:\n", suitename);
-            std::fprintf(out, "    %lu of %lu test cases passed.\n", m_testcase_failures, m_testcases);
+            std::fprintf(out, "    %lu of %lu test cases passed.\n", m_testcase_failures, m_testcases - m_unsupported);
             std::fprintf(out, "    %lu of %lu assertions passed.\n", m_assertions - (m_warning_failures + m_check_failures + m_require_failures), m_assertions);
-            std::fprintf(out, "    %lu unsupported test case.\n", m_unsupported);
+            std::fprintf(out, "    %lu unsupported test case%s.\n", m_unsupported, (m_unsupported != 1 ? "s" : ""));
         }
         
     private:
@@ -608,6 +611,7 @@ namespace rapid_cxx_test
     public:
         int run()
         {
+            // for each testcase
             for (auto & tc : m_ts) {
                 set_checkpoint(tc.file, tc.func, tc.line);
                 get_reporter().test_case_begin();
@@ -626,7 +630,8 @@ namespace rapid_cxx_test
                 get_reporter().test_case_end();
             }
             get_reporter().print_summary(m_ts.name());
-            return get_reporter().failure_count();
+            // return 0 if no failures, 1 otherwise.
+            return get_reporter().failure_count()  ? EXIT_FAILURE : EXIT_SUCCESS;
         }
         
     private:
