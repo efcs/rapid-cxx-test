@@ -23,9 +23,22 @@ namespace rapid_cxx_test
         int run()
         {
             for (auto & tc : m_ts) {
-                tc.invoke();
+                set_checkpoint(tc.file, tc.func, tc.line);
+                get_observer().clear_failure();
+                try {
+                    tc.invoke();
+                } catch (...) {
+                    test_outcome o;
+                    o.type = failure_type::uncaught_exception;
+                    o.file = get_checkpoint().file;
+                    o.func = get_checkpoint().func;
+                    o.line = get_checkpoint().line;
+                    o.expression = "";
+                    o.message = "";
+                    get_observer().report(o);
+                }
             }
-            return 0;
+            return get_observer().failure_count();
         }
         
     private:

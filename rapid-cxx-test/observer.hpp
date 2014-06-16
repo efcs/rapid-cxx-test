@@ -11,6 +11,85 @@ namespace rapid_cxx_test
     {
     public:
         test_observer() {}
+        
+        void report(test_outcome o) noexcept
+        {
+            ++m_assertions;
+            if (o.type == failure_type::none) {
+                return;
+            }
+            else if (o.type == failure_type::warn) {
+                ++m_warning_failures;
+                report_error(o);
+            }
+            else if (o.type == failure_type::check) {
+                ++m_check_failures;
+                report_error(o);
+                m_failure = o;
+            }
+            else if (o.type ==  failure_type::require) {
+                ++m_require_failures;
+                report_error(o);
+                m_failure = o;
+            }
+            else if (o.type == failure_type::assert) {
+                report_error(o);
+                m_failure = o;
+            }
+            else if (o.type == failure_type::uncaught_exception) {
+                std::fprintf(stderr
+                  , "TEST CASE FAILED WITH UNCAUGHT EXCEPTION:\n    last checkpoint near %s:%u %s\n\n"
+                  , o.file, (int)o.line, o.func
+                  );
+                m_failure = o;
+            }
+        }
+        
+        test_outcome current_failure() const noexcept
+        {
+            return m_failure;
+        }
+        
+        void clear_failure() 
+        {
+            m_failure.type = failure_type::none;
+            m_failure.file = "";
+            m_failure.func = "";
+            m_failure.line = 0;
+            m_failure.expression = "";
+            m_failure.message = "";
+        }
+        
+        std::size_t assertion_count() const noexcept
+        { return m_assertions; }
+        
+        std::size_t warning_failure_count() const noexcept
+        { return m_warning_failures; }
+        
+        std::size_t check_failure_count() const noexcept
+        { return m_check_failures; }
+        
+        std::size_t require_failure_count() const noexcept
+        { return m_require_failures; }
+        
+        std::size_t failure_count() const noexcept
+        { return m_check_failures + m_require_failures; }
+        
+    private:
+        void report_error(test_outcome o) const noexcept
+        {
+            std::fprintf(stderr, "In %s:%u %s:\n    Assertion %s failed. %s\n\n"
+                , o.file, (unsigned)o.line, o.func, o.expression, o.message ? o.message : ""
+              );
+        }
+        
+    private:
+        std::size_t m_assertions{};
+        std::size_t m_warning_failures{};
+        std::size_t m_check_failures{};
+        std::size_t m_require_failures{};
+    
+        test_outcome m_failure{failure_type::none, "", "", 0, "", ""};
     };
     
     inline test_observer & get_observer() noexcept

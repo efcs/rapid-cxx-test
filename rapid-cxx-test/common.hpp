@@ -8,7 +8,13 @@
 # define RAPID_CXX_TEST_PP_CAT_2(x, y) x##y
 
 # define RAPID_CXX_TEST_PP_STR(...) RAPID_CXX_TEST_PP_STR_2(__VA_ARGS__)
-# define RAPID_CXX_TEST_PP_STR_2(...) #__VA_ARGS__
+# define RAPID_CXX_TEST_PP_STR_2(...) #__VA_ARGS__ 
+
+# if defined(__GNUC__)
+#   define TEST_FUNC_NAME() __PRETTY_FUNCTION__
+# else
+#   define TEST_FUNC_NAME() __func__
+# endif
 
 namespace rapid_cxx_test
 {
@@ -35,9 +41,9 @@ namespace rapid_cxx_test
         none, 
         warn,
         check, 
+        require, 
         assert, 
-        no_throw, 
-        throws
+        uncaught_exception
     };
     
     inline const char *to_string(failure_type f) noexcept
@@ -47,15 +53,15 @@ namespace rapid_cxx_test
             case failure_type::none:
                 return "none";
             case failure_type::warn:
-                return "WARNING";
+                return "TEST_WARN";
             case failure_type::check:
-                return "CHECK";
+                return "TEST_CHECK";
+            case failure_type::require:
+                return "TEST_REQUIRE";
             case failure_type::assert:
-                return "ASSERT";
-            case failure_type::no_throw:
-                return "NO THROW";
-            case failure_type::throws:
-                return "THROWS";
+                return "TEST_ASSERT";
+            case failure_type::uncaught_exception:
+                return "UNCAUGHT EXCEPTION";
             default:
                 assert(!bool("IN DEFAULT CASE"));
                 return nullptr;
@@ -63,13 +69,14 @@ namespace rapid_cxx_test
     }
     
     ////////////////////////////////////////////////////////////////////////////
-    struct test_failure
+    struct test_outcome
     {
         failure_type type;
         const char *file;
         const char *func;
         std::size_t line;
         const char *expression;
+        const char *message;
     };
     
     ////////////////////////////////////////////////////////////////////////////
