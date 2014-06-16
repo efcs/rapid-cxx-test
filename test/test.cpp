@@ -14,6 +14,11 @@ TEST_CASE(MyTest)
     TEST_CHECK_NO_THROW(false);
     TEST_REQUIRE_NO_THROW(false);
     TEST_ASSERT_NO_THROW(false);
+    
+    TEST_WARN_THROWS(int, throw 0);
+    TEST_CHECK_THROWS(int, throw 0);
+    TEST_REQUIRE_THROWS(int, throw 0);
+    TEST_ASSERT_THROWS(int, throw 0);
 }
 
 TEST_CASE(MyTest1)

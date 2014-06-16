@@ -155,17 +155,17 @@ namespace Name                                                      \
     } while (false)
 # 
 
-# define TEST_WARN_THROWS(Expr, ...)                                                   \
+# define TEST_WARN_THROWS(Except, ...)                                                 \
     do {                                                                               \
         TEST_SET_CHECKPOINT();                                                         \
         ::rapid_cxx_test::test_outcome m_f{                                            \
             ::rapid_cxx_test::failure_type::none, __FILE__, TEST_FUNC_NAME(), __LINE__ \
-            , "TEST_WARN_THROWS(" #Expr, #__VA_ARGS__ ")", ""                          \
+            , "TEST_WARN_THROWS(" #Except "," #__VA_ARGS__ ")", ""                     \
             };                                                                         \
         try {                                                                          \
             (__VA_ARGS__);                                                             \
             m_f.type = ::rapid_cxx_test::failure_type::warn;                           \
-        } catch (Expr const &) {}                                                      \
+        } catch (Except const &) {}                                                    \
         ::rapid_cxx_test::get_observer().report(m_f);                                  \
     } while (false)
 # 
@@ -197,7 +197,7 @@ namespace Name                                                      \
         try {                                                                          \
             (__VA_ARGS__);                                                             \
             m_f.type = ::rapid_cxx_test::failure_type::check;                          \
-        } catch (Expr const &) {}                                                      \
+        } catch (Except const &) {}                                                    \
         ::rapid_cxx_test::get_observer().report(m_f);                                  \
     } while (false)
 # 
@@ -232,7 +232,7 @@ namespace Name                                                      \
         try {                                                                          \
             (__VA_ARGS__);                                                             \
             m_f.type = ::rapid_cxx_test::failure_type::require;                        \
-        } catch (Expr const &) {}                                                      \
+        } catch (Except const &) {}                                                    \
         ::rapid_cxx_test::get_observer().report(m_f);                                  \
         if (m_f.type != ::rapid_cxx_test::failure_type::none) {                        \
             return;                                                                    \
@@ -271,7 +271,7 @@ namespace Name                                                      \
         try {                                                                          \
             (__VA_ARGS__);                                                             \
             m_f.type = ::rapid_cxx_test::failure_type::assert;                         \
-        } catch (Expr const &) {}                                                      \
+        } catch (Except const &) {}                                                    \
         ::rapid_cxx_test::get_observer().report(m_f);                                  \
         if (m_f.type != ::rapid_cxx_test::failure_type::none) {                        \
             std::abort();                                                              \
@@ -425,9 +425,6 @@ namespace rapid_cxx_test
             st.register_test(tc);
         }
     };
-    
-    
-    
     
     ////////////////////////////////////////////////////////////////////////////
     class test_observer
