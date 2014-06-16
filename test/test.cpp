@@ -1,9 +1,9 @@
 #include "rapid-cxx-test.hpp"
 #include <iostream>
 
-TEST_SUITE(MySuite)
+TEST_SUITE(rapid_cxx_test_testsuite)
 
-TEST_CASE(MyTest)
+TEST_CASE(all_pass_test)
 {
     TEST_WARN(true);
     TEST_CHECK(true);
@@ -21,23 +21,26 @@ TEST_CASE(MyTest)
     TEST_ASSERT_THROWS(int, throw 0);
 }
 
-TEST_CASE(MyTest1)
+TEST_CASE(warn_fail_test)
 {
     TEST_WARN(false);
+    TEST_WARN_NO_THROW(throw 0);
+    TEST_WARN_THROWS(int, ((void)0));
 }
 
-TEST_CASE(MyTest2)
+TEST_CASE(check_fail_test)
 {
     TEST_CHECK(false);
+    TEST_CHECK_NO_THROW(throw 0);
+    TEST_CHECK_THROWS(int, ((void)0));
 }
 
-TEST_CASE(MyTest3)
+TEST_CASE(require_fail_test)
 {
     TEST_REQUIRE(false);
-    TEST_ASSERT(false);
 }
 
-TEST_CASE(MyTest4)
+TEST_CASE(uncaught_exception_test)
 {
     throw 0;
 }
