@@ -1,5 +1,5 @@
-#ifndef RAPID_CXX_TEST_UNIT_TEST_HPP
-#define RAPID_CXX_TEST_UNIT_TEST_HPP
+#ifndef RAPID_CXX_TEST_HPP
+#define RAPID_CXX_TEST_HPP
 
 # include <cstddef>
 # include <cstdlib>
@@ -592,4 +592,4 @@ namespace rapid_cxx_test
     };
     
 }                                                    // namespace rapid_cxx_test
-#endif /* RAPID_CXX_TEST_UNIT_TEST_HPP */
+#endif /* RAPID_CXX_TEST_HPP */

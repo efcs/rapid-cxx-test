@@ -1,4 +1,4 @@
-#include "rapid-cxx-test/unit_test.hpp"
+#include "rapid-cxx-test.hpp"
 #include <iostream>
 
 TEST_SUITE(MySuite)
