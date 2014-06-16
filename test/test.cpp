@@ -45,4 +45,9 @@ TEST_CASE(uncaught_exception_test)
     throw 0;
 }
 
+TEST_CASE(unsupported_test)
+{
+    TEST_UNSUPPORTED();
+}
+
 TEST_SUITE_END()

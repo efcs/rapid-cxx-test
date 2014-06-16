@@ -75,6 +75,17 @@ namespace Name                                                      \
 ////////////////////////////////////////////////////////////////////////////////
 # define TEST_SET_CHECKPOINT() ::rapid_cxx_test::set_checkpoint(__FILE__, TEST_FUNC_NAME(), __LINE__)
 
+# define TEST_UNSUPPORTED()                                                                 \
+    do {                                                                                    \
+        TEST_SET_CHECKPOINT();                                                              \
+        ::rapid_cxx_test::test_outcome m_f{                                                 \
+          ::rapid_cxx_test::failure_type::unsupported, __FILE__, TEST_FUNC_NAME(), __LINE__ \
+          , "", ""                                                                          \
+        };                                                                                  \
+        ::rapid_cxx_test::get_reporter().report(m_f);                                       \
+    } while (false)
+# 
+
 # define TEST_WARN(...)                                                        \
     do {                                                                       \
         TEST_SET_CHECKPOINT();                                                 \
@@ -85,7 +96,7 @@ namespace Name                                                      \
         if (not (__VA_ARGS__)) {                                               \
             m_f.type = ::rapid_cxx_test::failure_type::warn;                   \
         }                                                                      \
-        ::rapid_cxx_test::get_observer().report(m_f);                          \
+        ::rapid_cxx_test::get_reporter().report(m_f);                          \
     } while (false)
 # 
 
@@ -99,7 +110,7 @@ namespace Name                                                      \
         if (not (__VA_ARGS__)) {                                               \
             m_f.type = ::rapid_cxx_test::failure_type::check;                  \
         }                                                                      \
-        ::rapid_cxx_test::get_observer().report(m_f);                          \
+        ::rapid_cxx_test::get_reporter().report(m_f);                          \
     } while (false)
 #
 
@@ -113,7 +124,7 @@ namespace Name                                                      \
         if (not (__VA_ARGS__)) {                                               \
             m_f.type = ::rapid_cxx_test::failure_type::require;                \
         }                                                                      \
-        ::rapid_cxx_test::get_observer().report(m_f);                          \
+        ::rapid_cxx_test::get_reporter().report(m_f);                          \
         if (m_f.type != ::rapid_cxx_test::failure_type::none) {                \
             return;                                                            \
         }                                                                      \
@@ -130,7 +141,7 @@ namespace Name                                                      \
         if (not (__VA_ARGS__)) {                                               \
             m_f.type = ::rapid_cxx_test::failure_type::assert;                 \
         }                                                                      \
-        ::rapid_cxx_test::get_observer().report(m_f);                          \
+        ::rapid_cxx_test::get_reporter().report(m_f);                          \
         if (m_f.type != ::rapid_cxx_test::failure_type::none) {                \
             std::abort();                                                      \
         }                                                                      \
@@ -151,7 +162,7 @@ namespace Name                                                      \
         } catch (...) {                                                                \
             m_f.type = ::rapid_cxx_test::failure_type::warn;                           \
         }                                                                              \
-        ::rapid_cxx_test::get_observer().report(m_f);                                  \
+        ::rapid_cxx_test::get_reporter().report(m_f);                                  \
     } while (false)
 # 
 
@@ -166,7 +177,7 @@ namespace Name                                                      \
             (__VA_ARGS__);                                                             \
             m_f.type = ::rapid_cxx_test::failure_type::warn;                           \
         } catch (Except const &) {}                                                    \
-        ::rapid_cxx_test::get_observer().report(m_f);                                  \
+        ::rapid_cxx_test::get_reporter().report(m_f);                                  \
     } while (false)
 # 
 
@@ -183,7 +194,7 @@ namespace Name                                                      \
         } catch (...) {                                                                \
             m_f.type = ::rapid_cxx_test::failure_type::check;                          \
         }                                                                              \
-        ::rapid_cxx_test::get_observer().report(m_f);                                  \
+        ::rapid_cxx_test::get_reporter().report(m_f);                                  \
     } while (false)
 #
 
@@ -198,7 +209,7 @@ namespace Name                                                      \
             (__VA_ARGS__);                                                             \
             m_f.type = ::rapid_cxx_test::failure_type::check;                          \
         } catch (Except const &) {}                                                    \
-        ::rapid_cxx_test::get_observer().report(m_f);                                  \
+        ::rapid_cxx_test::get_reporter().report(m_f);                                  \
     } while (false)
 # 
 
@@ -215,7 +226,7 @@ namespace Name                                                      \
         } catch (...) {                                                                \
             m_f.type = ::rapid_cxx_test::failure_type::require;                        \
         }                                                                              \
-        ::rapid_cxx_test::get_observer().report(m_f);                                  \
+        ::rapid_cxx_test::get_reporter().report(m_f);                                  \
         if (m_f.type != ::rapid_cxx_test::failure_type::none) {                        \
             return;                                                                    \
         }                                                                              \
@@ -233,7 +244,7 @@ namespace Name                                                      \
             (__VA_ARGS__);                                                             \
             m_f.type = ::rapid_cxx_test::failure_type::require;                        \
         } catch (Except const &) {}                                                    \
-        ::rapid_cxx_test::get_observer().report(m_f);                                  \
+        ::rapid_cxx_test::get_reporter().report(m_f);                                  \
         if (m_f.type != ::rapid_cxx_test::failure_type::none) {                        \
             return;                                                                    \
         }                                                                              \
@@ -253,7 +264,7 @@ namespace Name                                                      \
         } catch (...) {                                                                \
             m_f.type = ::rapid_cxx_test::failure_type::assert;                         \
         }                                                                              \
-        ::rapid_cxx_test::get_observer().report(m_f);                                  \
+        ::rapid_cxx_test::get_reporter().report(m_f);                                  \
         if (m_f.type != ::rapid_cxx_test::failure_type::none) {                        \
             std::abort();                                                              \
         }                                                                              \
@@ -272,7 +283,7 @@ namespace Name                                                      \
             (__VA_ARGS__);                                                             \
             m_f.type = ::rapid_cxx_test::failure_type::assert;                         \
         } catch (Except const &) {}                                                    \
-        ::rapid_cxx_test::get_observer().report(m_f);                                  \
+        ::rapid_cxx_test::get_reporter().report(m_f);                                  \
         if (m_f.type != ::rapid_cxx_test::failure_type::none) {                        \
             std::abort();                                                              \
         }                                                                              \
@@ -298,34 +309,13 @@ namespace rapid_cxx_test
     enum class failure_type
     {
         none, 
+        unsupported, 
         warn,
         check, 
         require, 
         assert, 
         uncaught_exception
     };
-    
-    inline const char *to_string(failure_type f) noexcept
-    {
-        switch (f)
-        {
-            case failure_type::none:
-                return "none";
-            case failure_type::warn:
-                return "TEST_WARN";
-            case failure_type::check:
-                return "TEST_CHECK";
-            case failure_type::require:
-                return "TEST_REQUIRE";
-            case failure_type::assert:
-                return "TEST_ASSERT";
-            case failure_type::uncaught_exception:
-                return "UNCAUGHT EXCEPTION";
-            default:
-                assert(!bool("IN DEFAULT CASE"));
-                return nullptr;
-        }
-    }
     
     ////////////////////////////////////////////////////////////////////////////
     struct test_outcome
@@ -427,10 +417,10 @@ namespace rapid_cxx_test
     };
     
     ////////////////////////////////////////////////////////////////////////////
-    class test_observer
+    class test_reporter
     {
     public:
-        test_observer() {}
+        test_reporter() {}
         
         void test_case_begin()
         {
@@ -440,7 +430,8 @@ namespace rapid_cxx_test
         
         void test_case_end()
         {
-            if (m_failure.type != failure_type::none) {
+            if (m_failure.type != failure_type::none 
+                && m_failure.type !=  failure_type::unsupported) {
                 ++m_testcase_failures;
             }
         }
@@ -450,6 +441,10 @@ namespace rapid_cxx_test
             ++m_assertions;
             if (o.type == failure_type::none) {
                 return;
+            }
+            else if (o.type == failure_type::unsupported) {
+                ++m_unsupported;
+                m_failure = o;
             }
             else if (o.type == failure_type::warn) {
                 ++m_warning_failures;
@@ -503,6 +498,9 @@ namespace rapid_cxx_test
             return m_testcase_failures;
         }
         
+        std::size_t unsupported_count() const noexcept
+        { return m_unsupported; }
+        
         std::size_t assertion_count() const noexcept
         { return m_assertions; }
         
@@ -518,12 +516,14 @@ namespace rapid_cxx_test
         std::size_t failure_count() const noexcept
         { return m_check_failures + m_require_failures; }
         
+        
         void print_summary() const noexcept
         {
             auto out = failure_count() ? stderr : stdout;
             std::fprintf(out, "Test Summary:\n");
-            std::fprintf(out, "    %lu out of %lu test cases passed.\n", m_testcase_failures, m_testcases);
-            std::fprintf(out, "    %lu out of %lu assertions passed.\n", m_assertions - (m_warning_failures + m_check_failures + m_require_failures), m_assertions);
+            std::fprintf(out, "    %lu of %lu test cases passed.\n", m_testcase_failures, m_testcases);
+            std::fprintf(out, "    %lu of %lu assertions passed.\n", m_assertions - (m_warning_failures + m_check_failures + m_require_failures), m_assertions);
+            std::fprintf(out, "    %lu unsupported test case.\n", m_unsupported);
         }
         
     private:
@@ -535,8 +535,9 @@ namespace rapid_cxx_test
         }
         
     private:
-        std::size_t m_testcases;
-        std::size_t m_testcase_failures;
+        std::size_t m_testcases{};
+        std::size_t m_testcase_failures{};
+        std::size_t m_unsupported{};
         std::size_t m_assertions{};
         std::size_t m_warning_failures{};
         std::size_t m_check_failures{};
@@ -546,9 +547,9 @@ namespace rapid_cxx_test
     };
     
     ////////////////////////////////////////////////////////////////////////////
-    inline test_observer & get_observer() noexcept
+    inline test_reporter & get_reporter() noexcept
     {
-        static test_observer o;
+        static test_reporter o;
         return o;
     }
     
@@ -568,7 +569,7 @@ namespace rapid_cxx_test
         {
             for (auto & tc : m_ts) {
                 set_checkpoint(tc.file, tc.func, tc.line);
-                get_observer().test_case_begin();
+                get_reporter().test_case_begin();
                 try {
                     tc.invoke();
                 } catch (...) {
@@ -579,12 +580,12 @@ namespace rapid_cxx_test
                     o.line = get_checkpoint().line;
                     o.expression = "";
                     o.message = "";
-                    get_observer().report(o);
+                    get_reporter().report(o);
                 }
-                get_observer().test_case_end();
+                get_reporter().test_case_end();
             }
-            get_observer().print_summary();
-            return get_observer().failure_count();
+            get_reporter().print_summary();
+            return get_reporter().failure_count();
         }
         
     private:
