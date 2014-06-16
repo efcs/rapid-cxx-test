@@ -50,4 +50,10 @@ TEST_CASE(unsupported_test)
     TEST_UNSUPPORTED();
 }
 
+TEST_CASE(same_type_test)
+{
+    TEST_SAME_TYPE(int, int);
+    TEST_NOT_SAME_TYPE(int, int &);
+}
+
 TEST_SUITE_END()

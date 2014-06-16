@@ -71,7 +71,7 @@ namespace Name                                                      \
 # 
 
 ////////////////////////////////////////////////////////////////////////////////
-//                          
+//                         ASSERTIONS
 ////////////////////////////////////////////////////////////////////////////////
 # define TEST_SET_CHECKPOINT() ::rapid_cxx_test::set_checkpoint(__FILE__, TEST_FUNC_NAME(), __LINE__)
 
@@ -289,6 +289,13 @@ namespace Name                                                      \
         }                                                                              \
     } while (false)
 #
+
+# define TEST_SAME_TYPE(...) \
+    static_assert(::rapid_cxx_test::detail::is_same<__VA_ARGS__>::value, "is_same<" #__VA_ARGS__ ">::value")
+# 
+
+# define TEST_NOT_SAME_TYPE(...) \
+    static_assert(not ::rapid_cxx_test::detail::is_same<__VA_ARGS__>::value, "not is_same<" #__VA_ARGS__ ">::value")
 
 namespace rapid_cxx_test
 {
@@ -591,6 +598,22 @@ namespace rapid_cxx_test
     private:
         test_suite & m_ts;
     };
+    
+    namespace detail
+    {
+        ////////////////////////////////////////////////////////////////////////
+        template <class T, class U>
+        struct is_same
+        {
+            enum { value = 0 };
+        };
+        
+        template <class T>
+        struct is_same<T, T>
+        {
+            enum { value = 1 };
+        };
+    }                                                       // namespace detail
     
 }                                                    // namespace rapid_cxx_test
 #endif /* RAPID_CXX_TEST_HPP */
