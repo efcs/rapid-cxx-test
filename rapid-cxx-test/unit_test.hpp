@@ -22,7 +22,7 @@ namespace Name                                                      \
 {                                                                   \
     inline ::rapid_cxx_test::test_suite & get_test_suite() noexcept \
     {                                                               \
-        ::rapid_cxx_test::test_suite m_suite(#Name);                \
+        static ::rapid_cxx_test::test_suite m_suite(#Name);         \
         return m_suite;                                             \
     }                                                               \
 # 
@@ -46,7 +46,8 @@ namespace Name                                                      \
 # define TEST_CASE(Name)                                                                                \
     void Name();                                                                                        \
     void RAPID_CXX_TEST_PP_CAT(Name, _invoker)()                                                        \
-    {   ::rapid_cxx_test::set_checkpoint(__FILE__,  #Name, __LINE__)                                                                                         \
+    {                                                                                                   \
+        ::rapid_cxx_test::set_checkpoint(__FILE__,  #Name, __LINE__);                                   \
         Name();                                                                                         \
     }                                                                                                   \
     static ::rapid_cxx_test::registrar                                                                  \
