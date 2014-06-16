@@ -19,6 +19,10 @@ TEST_CASE(all_pass_test)
     TEST_CHECK_THROWS(int, throw 0);
     TEST_REQUIRE_THROWS(int, throw 0);
     TEST_ASSERT_THROWS(int, throw 0);
+    
+    TEST_STATIC_ASSERT(true);
+    TEST_SAME_TYPE(int, int);
+    TEST_NOT_SAME_TYPE(long, int);
 }
 
 TEST_CASE(warn_fail_test)
@@ -43,18 +47,6 @@ TEST_CASE(require_fail_test)
 TEST_CASE(uncaught_exception_test)
 {
     throw 0;
-}
-
-TEST_CASE(unsupported_test)
-{
-    TEST_UNSUPPORTED();
-    TEST_ASSERT(false);
-}
-
-TEST_CASE(same_type_test)
-{
-    TEST_SAME_TYPE(int, int);
-    TEST_NOT_SAME_TYPE(int, int &);
 }
 
 TEST_CASE(unsupported_two)
