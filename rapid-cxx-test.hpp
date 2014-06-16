@@ -6,6 +6,11 @@
 # include <cstdio>
 # include <cassert>
 
+# if defined(__clang__)
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Wglobal-constructors"
+# endif
+
 # define RAPID_CXX_TEST_PP_CAT(x, y) RAPID_CXX_TEST_PP_CAT_2(x, y)
 # define RAPID_CXX_TEST_PP_CAT_2(x, y) x##y
 
@@ -57,7 +62,7 @@ namespace Name                                                      \
 
 # define TEST_CASE(Name)                                                                                \
     void Name();                                                                                        \
-    void RAPID_CXX_TEST_PP_CAT(Name, _invoker)()                                                        \
+    static void RAPID_CXX_TEST_PP_CAT(Name, _invoker)()                                                 \
     {                                                                                                   \
         Name();                                                                                         \
     }                                                                                                   \
@@ -91,65 +96,65 @@ namespace Name                                                      \
 ////////////////////////////////////////////////////////////////////////////////
 //                            BASIC ASSERTIONS
 ////////////////////////////////////////////////////////////////////////////////
-# define TEST_WARN(...)                                                        \
-    do {                                                                       \
-        TEST_SET_CHECKPOINT();                                                 \
-        ::rapid_cxx_test::test_outcome m_f{                                    \
+# define TEST_WARN(...)                                                                \
+    do {                                                                               \
+        TEST_SET_CHECKPOINT();                                                         \
+        ::rapid_cxx_test::test_outcome m_f{                                            \
             ::rapid_cxx_test::failure_type::none, __FILE__, TEST_FUNC_NAME(), __LINE__ \
-            , "TEST_WARN(" #__VA_ARGS__ ")", ""                                \
-            };                                                                 \
-        if (not (__VA_ARGS__)) {                                               \
-            m_f.type = ::rapid_cxx_test::failure_type::warn;                   \
-        }                                                                      \
-        ::rapid_cxx_test::get_reporter().report(m_f);                          \
+            , "TEST_WARN(" #__VA_ARGS__ ")", ""                                        \
+            };                                                                         \
+        if (not (__VA_ARGS__)) {                                                       \
+            m_f.type = ::rapid_cxx_test::failure_type::warn;                           \
+        }                                                                              \
+        ::rapid_cxx_test::get_reporter().report(m_f);                                  \
     } while (false)
 # 
 
-# define TEST_CHECK(...)                                                       \
-    do {                                                                       \
-        TEST_SET_CHECKPOINT();                                                 \
-        ::rapid_cxx_test::test_outcome m_f{                                    \
+# define TEST_CHECK(...)                                                               \
+    do {                                                                               \
+        TEST_SET_CHECKPOINT();                                                         \
+        ::rapid_cxx_test::test_outcome m_f{                                            \
             ::rapid_cxx_test::failure_type::none, __FILE__, TEST_FUNC_NAME(), __LINE__ \
-            , "TEST_CHECK(" #__VA_ARGS__ ")", ""                               \
-            };                                                                 \
-        if (not (__VA_ARGS__)) {                                               \
-            m_f.type = ::rapid_cxx_test::failure_type::check;                  \
-        }                                                                      \
-        ::rapid_cxx_test::get_reporter().report(m_f);                          \
+            , "TEST_CHECK(" #__VA_ARGS__ ")", ""                                       \
+            };                                                                         \
+        if (not (__VA_ARGS__)) {                                                       \
+            m_f.type = ::rapid_cxx_test::failure_type::check;                          \
+        }                                                                              \
+        ::rapid_cxx_test::get_reporter().report(m_f);                                  \
     } while (false)
 #
 
-# define TEST_REQUIRE(...)                                                     \
-    do {                                                                       \
-        TEST_SET_CHECKPOINT();                                                 \
-        ::rapid_cxx_test::test_outcome m_f{                                    \
+# define TEST_REQUIRE(...)                                                             \
+    do {                                                                               \
+        TEST_SET_CHECKPOINT();                                                         \
+        ::rapid_cxx_test::test_outcome m_f{                                            \
             ::rapid_cxx_test::failure_type::none, __FILE__, TEST_FUNC_NAME(), __LINE__ \
-            , "TEST_REQUIRE(" #__VA_ARGS__ ")", ""                             \
-            };                                                                 \
-        if (not (__VA_ARGS__)) {                                               \
-            m_f.type = ::rapid_cxx_test::failure_type::require;                \
-        }                                                                      \
-        ::rapid_cxx_test::get_reporter().report(m_f);                          \
-        if (m_f.type != ::rapid_cxx_test::failure_type::none) {                \
-            return;                                                            \
-        }                                                                      \
+            , "TEST_REQUIRE(" #__VA_ARGS__ ")", ""                                     \
+            };                                                                         \
+        if (not (__VA_ARGS__)) {                                                       \
+            m_f.type = ::rapid_cxx_test::failure_type::require;                        \
+        }                                                                              \
+        ::rapid_cxx_test::get_reporter().report(m_f);                                  \
+        if (m_f.type != ::rapid_cxx_test::failure_type::none) {                        \
+            return;                                                                    \
+        }                                                                              \
     } while (false)
 # 
     
-# define TEST_ASSERT(...)                                                      \
-    do {                                                                       \
-        TEST_SET_CHECKPOINT();                                                 \
-        ::rapid_cxx_test::test_outcome m_f{                                    \
+# define TEST_ASSERT(...)                                                              \
+    do {                                                                               \
+        TEST_SET_CHECKPOINT();                                                         \
+        ::rapid_cxx_test::test_outcome m_f{                                            \
             ::rapid_cxx_test::failure_type::none, __FILE__, TEST_FUNC_NAME(), __LINE__ \
-            , "TEST_ASSERT(" #__VA_ARGS__ ")", ""                              \
-            };                                                                 \
-        if (not (__VA_ARGS__)) {                                               \
-            m_f.type = ::rapid_cxx_test::failure_type::assert;                 \
-        }                                                                      \
-        ::rapid_cxx_test::get_reporter().report(m_f);                          \
-        if (m_f.type != ::rapid_cxx_test::failure_type::none) {                \
-            std::abort();                                                      \
-        }                                                                      \
+            , "TEST_ASSERT(" #__VA_ARGS__ ")", ""                                      \
+            };                                                                         \
+        if (not (__VA_ARGS__)) {                                                       \
+            m_f.type = ::rapid_cxx_test::failure_type::assert;                         \
+        }                                                                              \
+        ::rapid_cxx_test::get_reporter().report(m_f);                                  \
+        if (m_f.type != ::rapid_cxx_test::failure_type::none) {                        \
+            std::abort();                                                              \
+        }                                                                              \
     } while (false)
 # 
 
@@ -172,12 +177,12 @@ namespace Name                                                      \
     } while (false)
 # 
 
-# define TEST_WARN_THROW(Except, ...)                                                 \
+# define TEST_WARN_THROW(Except, ...)                                                  \
     do {                                                                               \
         TEST_SET_CHECKPOINT();                                                         \
         ::rapid_cxx_test::test_outcome m_f{                                            \
             ::rapid_cxx_test::failure_type::none, __FILE__, TEST_FUNC_NAME(), __LINE__ \
-            , "TEST_WARN_THROW(" #Except "," #__VA_ARGS__ ")", ""                     \
+            , "TEST_WARN_THROW(" #Except "," #__VA_ARGS__ ")", ""                      \
             };                                                                         \
         try {                                                                          \
             (__VA_ARGS__);                                                             \
@@ -206,12 +211,12 @@ namespace Name                                                      \
     } while (false)
 #
 
-# define TEST_CHECK_THROW(Except, ...)                                                \
+# define TEST_CHECK_THROW(Except, ...)                                                 \
     do {                                                                               \
         TEST_SET_CHECKPOINT();                                                         \
         ::rapid_cxx_test::test_outcome m_f{                                            \
             ::rapid_cxx_test::failure_type::none, __FILE__, TEST_FUNC_NAME(), __LINE__ \
-            , "TEST_CHECK_THROW(" #Except "," #__VA_ARGS__ ")", ""                    \
+            , "TEST_CHECK_THROW(" #Except "," #__VA_ARGS__ ")", ""                     \
             };                                                                         \
         try {                                                                          \
             (__VA_ARGS__);                                                             \
@@ -244,12 +249,12 @@ namespace Name                                                      \
     } while (false)
 #
 
-# define TEST_REQUIRE_THROW(Except, ...)                                              \
+# define TEST_REQUIRE_THROW(Except, ...)                                               \
     do {                                                                               \
         TEST_SET_CHECKPOINT();                                                         \
         ::rapid_cxx_test::test_outcome m_f{                                            \
             ::rapid_cxx_test::failure_type::none, __FILE__, TEST_FUNC_NAME(), __LINE__ \
-            , "TEST_REQUIRE_THROW(" #Except "," #__VA_ARGS__ ")", ""                  \
+            , "TEST_REQUIRE_THROW(" #Except "," #__VA_ARGS__ ")", ""                   \
             };                                                                         \
         try {                                                                          \
             (__VA_ARGS__);                                                             \
@@ -736,4 +741,8 @@ namespace rapid_cxx_test
     }                                                       // namespace detail
     
 }                                                    // namespace rapid_cxx_test
+
+# if defined(__clang__)
+#   pragma clang diagnostic pop
+# endif
 #endif /* RAPID_CXX_TEST_HPP */
