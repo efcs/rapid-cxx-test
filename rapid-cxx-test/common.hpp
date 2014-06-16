@@ -107,7 +107,7 @@ namespace rapid_cxx_test
     {
     public:
         test_suite(const char *xname) noexcept
-          : m_name(xname), m_tests(), m_index(0)
+          : m_name(xname), m_tests(), m_size(0)
         {
             assert(xname);
         }

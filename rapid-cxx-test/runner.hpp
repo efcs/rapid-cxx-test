@@ -29,7 +29,7 @@ namespace rapid_cxx_test
         }
         
     private:
-        test_suite m_ts;
+        test_suite & m_ts;
     };
 }                                                   // namespace rapid_cxx_test
 #endif /* RAPID_CXX_TEST_RUNNER_HPP */
