@@ -1,4 +1,4 @@
 
 .PHONY: all
 all:
-	$(CXX) -std=c++11 -Wall -Wextra -pedantic -I.. test.cpp
+	$(CXX) -std=c++11 -Wall -Wextra -pedantic -Wno-unused-value -I.. test.cpp

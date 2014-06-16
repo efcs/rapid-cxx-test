@@ -12,6 +12,19 @@ namespace rapid_cxx_test
     public:
         test_observer() {}
         
+        void test_case_begin()
+        {
+            ++m_testcases;
+            clear_failure();
+        }
+        
+        void test_case_end()
+        {
+            if (m_failure.type != failure_type::none) {
+                ++m_testcase_failures;
+            }
+        }
+        
         void report(test_outcome o) noexcept
         {
             ++m_assertions;
@@ -60,6 +73,16 @@ namespace rapid_cxx_test
             m_failure.message = "";
         }
         
+        std::size_t test_case_count() const noexcept
+        {
+            return m_testcases;
+        }
+        
+        std::size_t test_case_failure_count() const noexcept
+        {
+            return m_testcase_failures;
+        }
+        
         std::size_t assertion_count() const noexcept
         { return m_assertions; }
         
@@ -75,6 +98,14 @@ namespace rapid_cxx_test
         std::size_t failure_count() const noexcept
         { return m_check_failures + m_require_failures; }
         
+        void print_summary() const noexcept
+        {
+            auto out = failure_count() ? stderr : stdout;
+            std::fprintf(out, "Test Summary:\n");
+            std::fprintf(out, "    %lu out of %lu test cases passed.\n", m_testcase_failures, m_testcases);
+            std::fprintf(out, "    %lu out of %lu assertions passed.\n", m_assertions - (m_warning_failures + m_check_failures + m_require_failures), m_assertions);
+        }
+        
     private:
         void report_error(test_outcome o) const noexcept
         {
@@ -84,6 +115,8 @@ namespace rapid_cxx_test
         }
         
     private:
+        std::size_t m_testcases;
+        std::size_t m_testcase_failures;
         std::size_t m_assertions{};
         std::size_t m_warning_failures{};
         std::size_t m_check_failures{};

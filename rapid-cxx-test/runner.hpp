@@ -24,7 +24,7 @@ namespace rapid_cxx_test
         {
             for (auto & tc : m_ts) {
                 set_checkpoint(tc.file, tc.func, tc.line);
-                get_observer().clear_failure();
+                get_observer().test_case_begin();
                 try {
                     tc.invoke();
                 } catch (...) {
@@ -37,7 +37,9 @@ namespace rapid_cxx_test
                     o.message = "";
                     get_observer().report(o);
                 }
+                get_observer().test_case_end();
             }
+            get_observer().print_summary();
             return get_observer().failure_count();
         }
         
