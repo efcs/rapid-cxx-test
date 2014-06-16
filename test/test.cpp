@@ -48,6 +48,7 @@ TEST_CASE(uncaught_exception_test)
 TEST_CASE(unsupported_test)
 {
     TEST_UNSUPPORTED();
+    TEST_ASSERT(false);
 }
 
 TEST_CASE(same_type_test)

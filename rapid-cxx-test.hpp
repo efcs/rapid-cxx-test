@@ -83,6 +83,7 @@ namespace Name                                                      \
           , "", ""                                                                          \
         };                                                                                  \
         ::rapid_cxx_test::get_reporter().report(m_f);                                       \
+        return;                                                                             \
     } while (false)
 # 
 
@@ -524,10 +525,10 @@ namespace rapid_cxx_test
         { return m_check_failures + m_require_failures; }
         
         
-        void print_summary() const noexcept
+        void print_summary(const char* suitename) const noexcept
         {
             auto out = failure_count() ? stderr : stdout;
-            std::fprintf(out, "Test Summary:\n");
+            std::fprintf(out, "Summary for testsuite %s:\n", suitename);
             std::fprintf(out, "    %lu of %lu test cases passed.\n", m_testcase_failures, m_testcases);
             std::fprintf(out, "    %lu of %lu assertions passed.\n", m_assertions - (m_warning_failures + m_check_failures + m_require_failures), m_assertions);
             std::fprintf(out, "    %lu unsupported test case.\n", m_unsupported);
@@ -591,7 +592,7 @@ namespace rapid_cxx_test
                 }
                 get_reporter().test_case_end();
             }
-            get_reporter().print_summary();
+            get_reporter().print_summary(m_ts.name());
             return get_reporter().failure_count();
         }
         
