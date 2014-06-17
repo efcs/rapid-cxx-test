@@ -662,8 +662,8 @@ namespace rapid_cxx_test
     private:
         void report_error(test_outcome o) const noexcept
         {
-            std::fprintf(stderr, "In %s:%u %s:\n    Assertion %s failed. %s\n\n"
-                , o.file, (unsigned)o.line, o.func, o.expression, o.message ? o.message : ""
+            std::fprintf(stderr, "In %s:%lu %s:\n    Assertion %s failed. %s\n\n"
+                , o.file, o.line, o.func, o.expression, o.message ? o.message : ""
               );
         }
         
