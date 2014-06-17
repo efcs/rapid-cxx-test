@@ -558,11 +558,14 @@ namespace rapid_cxx_test
             }
         }
         
+# if defined(__GNUC__)
+#   pragma GCC diagnostic push
+#   pragma GCC diagnostic ignored "-Wswitch-default"
+# endif
         // Each assertion and failure is reported through this function.
         void report(test_outcome o) noexcept
         {
             ++m_assertions;
-            
             switch (o.type)
             {
             case failure_type::none:
@@ -598,6 +601,9 @@ namespace rapid_cxx_test
                 break;
             }
         }
+# if defined(__GNUC__)
+#   pragma GCC diagnostic pop
+# endif
         
         test_outcome current_failure() const noexcept
         {
