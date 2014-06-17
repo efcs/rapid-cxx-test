@@ -185,7 +185,7 @@ namespace Name                                                      \
             , "TEST_WARN_NO_THROW(" #__VA_ARGS__ ")", ""                               \
             };                                                                         \
         try {                                                                          \
-            (__VA_ARGS__);                                                             \
+            ((void)(__VA_ARGS__));                                                     \
         } catch (...) {                                                                \
             m_f.type = ::rapid_cxx_test::failure_type::warn;                           \
         }                                                                              \
@@ -201,7 +201,7 @@ namespace Name                                                      \
             , "TEST_WARN_THROW(" #Except "," #__VA_ARGS__ ")", ""                      \
             };                                                                         \
         try {                                                                          \
-            (__VA_ARGS__);                                                             \
+            ((void)(__VA_ARGS__));                                                     \
             m_f.type = ::rapid_cxx_test::failure_type::warn;                           \
         } catch (Except const &) {}                                                    \
         ::rapid_cxx_test::get_reporter().report(m_f);                                  \
@@ -219,7 +219,7 @@ namespace Name                                                      \
             , "TEST_CHECK_NO_THROW(" #__VA_ARGS__ ")", ""                              \
             };                                                                         \
         try {                                                                          \
-            (__VA_ARGS__);                                                             \
+            ((void)(__VA_ARGS__));                                                     \
         } catch (...) {                                                                \
             m_f.type = ::rapid_cxx_test::failure_type::check;                          \
         }                                                                              \
@@ -235,7 +235,7 @@ namespace Name                                                      \
             , "TEST_CHECK_THROW(" #Except "," #__VA_ARGS__ ")", ""                     \
             };                                                                         \
         try {                                                                          \
-            (__VA_ARGS__);                                                             \
+            ((void)(__VA_ARGS__));                                                     \
             m_f.type = ::rapid_cxx_test::failure_type::check;                          \
         } catch (Except const &) {}                                                    \
         ::rapid_cxx_test::get_reporter().report(m_f);                                  \
@@ -254,7 +254,7 @@ namespace Name                                                      \
             , "TEST_REQUIRE_NO_THROW(" #__VA_ARGS__ ")", ""                            \
             };                                                                         \
         try {                                                                          \
-            (__VA_ARGS__);                                                             \
+            ((void)(__VA_ARGS__));                                                     \
         } catch (...) {                                                                \
             m_f.type = ::rapid_cxx_test::failure_type::require;                        \
         }                                                                              \
@@ -273,7 +273,7 @@ namespace Name                                                      \
             , "TEST_REQUIRE_THROW(" #Except "," #__VA_ARGS__ ")", ""                   \
             };                                                                         \
         try {                                                                          \
-            (__VA_ARGS__);                                                             \
+            ((void)(__VA_ARGS__));                                                     \
             m_f.type = ::rapid_cxx_test::failure_type::require;                        \
         } catch (Except const &) {}                                                    \
         ::rapid_cxx_test::get_reporter().report(m_f);                                  \
@@ -294,7 +294,7 @@ namespace Name                                                      \
             , "TEST_ASSERT_NO_THROW(" #__VA_ARGS__ ")", ""                             \
             };                                                                         \
         try {                                                                          \
-            (__VA_ARGS__);                                                             \
+            ((void)(__VA_ARGS__));                                                     \
         } catch (...) {                                                                \
             m_f.type = ::rapid_cxx_test::failure_type::assert;                         \
         }                                                                              \
@@ -314,7 +314,7 @@ namespace Name                                                      \
             , "TEST_ASSERT_THROW(" #Except "," #__VA_ARGS__ ")", ""                    \
             };                                                                         \
         try {                                                                          \
-            (__VA_ARGS__);                                                             \
+            ((void)(__VA_ARGS__));                                                     \
             m_f.type = ::rapid_cxx_test::failure_type::assert;                         \
         } catch (Except const &) {}                                                    \
         ::rapid_cxx_test::get_reporter().report(m_f);                                  \
