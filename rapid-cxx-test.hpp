@@ -653,8 +653,9 @@ namespace rapid_cxx_test
         void print_summary(const char* suitename) const noexcept
         {
             auto out = failure_count() ? stderr : stdout;
+            auto testcases_run = m_testcases - m_unsupported;
             std::fprintf(out, "Summary for testsuite %s:\n", suitename);
-            std::fprintf(out, "    %lu of %lu test cases passed.\n", m_testcase_failures, m_testcases - m_unsupported);
+            std::fprintf(out, "    %lu of %lu test cases passed.\n", testcases_run - m_testcase_failures, testcases_run);
             std::fprintf(out, "    %lu of %lu assertions passed.\n", m_assertions - (m_warning_failures + m_check_failures + m_require_failures), m_assertions);
             std::fprintf(out, "    %lu unsupported test case%s.\n", m_unsupported, (m_unsupported != 1 ? "s" : ""));
         }
