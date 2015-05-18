@@ -15,7 +15,7 @@
 # define RAPID_CXX_TEST_PP_CAT_2(x, y) x##y
 
 # define RAPID_CXX_TEST_PP_STR(...) RAPID_CXX_TEST_PP_STR_2(__VA_ARGS__)
-# define RAPID_CXX_TEST_PP_STR_2(...) #__VA_ARGS__ 
+# define RAPID_CXX_TEST_PP_STR_2(...) #__VA_ARGS__
 
 # if defined(__GNUC__)
 #   define TEST_FUNC_NAME() __PRETTY_FUNCTION__
@@ -73,7 +73,7 @@ namespace Name                                                      \
     static ::rapid_cxx_test::registrar                                                                  \
     RAPID_CXX_TEST_PP_CAT(rapid_cxx_test_registrar_, __LINE__)(                                         \
         get_test_suite()                                                                                \
-      , ::rapid_cxx_test::test_case{__FILE__, #Name, __LINE__, & RAPID_CXX_TEST_PP_CAT(Name, _invoker)} \
+      , ::rapid_cxx_test::test_case(__FILE__, #Name, __LINE__, & RAPID_CXX_TEST_PP_CAT(Name, _invoker)) \
       );                                                                                                \
     void Name()
 #
@@ -824,4 +824,5 @@ namespace rapid_cxx_test
 # if defined(__GNUC__)
 #   pragma GCC diagnostic pop
 # endif
+
 #endif /* RAPID_CXX_TEST_HPP */
