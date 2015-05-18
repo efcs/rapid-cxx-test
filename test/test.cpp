@@ -11,40 +11,41 @@ TEST_CASE(all_pass_test)
     TEST_CHECK(true);
     TEST_REQUIRE(true);
     TEST_ASSERT(true);
-    
+
     TEST_WARN_NO_THROW(false);
     TEST_CHECK_NO_THROW(false);
     TEST_REQUIRE_NO_THROW(false);
     TEST_ASSERT_NO_THROW(false);
-    
+
     TEST_WARN_THROW(int, throw 0);
     TEST_CHECK_THROW(int, throw 0);
     TEST_REQUIRE_THROW(int, throw 0);
     TEST_ASSERT_THROW(int, throw 0);
-    
+
     TEST_STATIC_ASSERT(true);
     TEST_SAME_TYPE(int, int);
     TEST_NOT_SAME_TYPE(long, int);
-    
+
     // check collections equal
-    std::vector<int> const col1 = { 0, 1, 2, 3 };
-    std::list<int> const col2 = { 0, 1, 2, 3 };
-    
+    int col0[] = { 0, 1, 2, 3 };
+    std::vector<int> const col1(col0, col0 + (sizeof(col0) / sizeof(int)));
+    std::list<int> const col2(col1.begin(), col1.end());
+
     TEST_WARN_EQUAL_COLLECTIONS(
         col1.begin(), col1.end()
       , col2.begin(), col2.end()
       );
-    
+
     TEST_CHECK_EQUAL_COLLECTIONS(
         col1.begin(), col1.end()
       , col2.begin(), col2.end()
       );
-    
+
     TEST_REQUIRE_EQUAL_COLLECTIONS(
         col1.begin(), col1.end()
       , col2.begin(), col2.end()
       );
-    
+
     TEST_ASSERT_EQUAL_COLLECTIONS(
         col1.begin(), col1.end()
       , col2.begin(), col2.end()
@@ -82,34 +83,40 @@ TEST_CASE(unsupported_two)
 
 TEST_CASE(collections_equal_warn_test)
 {
-    std::vector<int> const col1 = { 0, 1, 2, 3 };
-    std::list<int> const col2 = { 0, 1 };
-    
+    int col0[] = { 0, 1, 2, 3 };
+    std::vector<int> const col1(col0, col0 + (sizeof(col0) / sizeof(col0[0])));
+    int col2[] = { 0, 1 };
+    std::list<int> const col3(col2, col2 + (sizeof(col2) / sizeof(col2[0])));
+
     TEST_WARN_EQUAL_COLLECTIONS(
         col1.begin(), col1.end()
-      , col2.begin(), col2.end()
+      , col3.begin(), col3.end()
       );
 }
 
 TEST_CASE(collections_check_equal_fail_test)
 {
-    std::vector<int> const col1 = { 0, 1, 2, 3 };
-    std::list<int> const col2 = { 0, 1 };
-    
+    int col0[] = { 0, 1, 2, 3 };
+    std::vector<int> const col1(col0, col0 + (sizeof(col0) / sizeof(col0[0])));
+    int col2[] = { 0, 1 };
+    std::list<int> const col3(col2, col2 + (sizeof(col2) / sizeof(col2[0])));
+
     TEST_CHECK_EQUAL_COLLECTIONS(
         col1.begin(), col1.end()
-      , col2.begin(), col2.end()
+      , col3.begin(), col3.end()
       );
 }
 
 TEST_CASE(collections_require_equal_fail_test)
 {
-    std::vector<int> const col1 = { 0, 1, 2, 3 };
-    std::list<int> const col2 = { 0, 1 };
-    
+    int col0[] = { 0, 1, 2, 3 };
+    std::vector<int> const col1(col0, col0 + (sizeof(col0) / sizeof(col0[0])));
+    int col2[] = { 0, 1 };
+    std::list<int> const col3(col2, col2 + (sizeof(col2) / sizeof(col2[0])));
+
     TEST_REQUIRE_EQUAL_COLLECTIONS(
         col1.begin(), col1.end()
-      , col2.begin(), col2.end()
+      , col3.begin(), col3.end()
       );
     TEST_ASSERT(false);
 }
