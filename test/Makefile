@@ -1,8 +1,10 @@
 
+ARGS = -Wall -Wextra -pedantic -I.. -DRAPID_CXX_TEST_NO_SYSTEM_HEADER
+
 .PHONY: all
 all:
-	$(CXX) -std=c++11 -Wall -Wextra -pedantic -I.. test.cpp -o cxx11.out
-	$(CXX) -std=c++03 -Wall -Wextra -pedantic -Wno-variadic-macros -I.. test.cpp -o cxx03.out
+	$(CXX) $(ARGS) -std=c++11 test.cpp -o cxx11.out
+	$(CXX) $(ARGS) -std=c++03 -Wno-variadic-macros test.cpp -o cxx03.out
 	
 .PHONY: clean
 clean:

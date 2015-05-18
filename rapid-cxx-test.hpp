@@ -6,10 +6,9 @@
 # include <cstdio>
 # include <cassert>
 
-# if defined(__GNUC__)
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wvariadic-macros"
-# endif
+#if !defined(RAPID_CXX_TEST_NO_SYSTEM_HEADER) || !defined(__GNUC__)
+#pragma GCC system_header
+#endif
 
 # define RAPID_CXX_TEST_PP_CAT(x, y) RAPID_CXX_TEST_PP_CAT_2(x, y)
 # define RAPID_CXX_TEST_PP_CAT_2(x, y) x##y
@@ -63,7 +62,7 @@ namespace Name                                                      \
 ////////////////////////////////////////////////////////////////////////////////
 
 # if !defined(__clang__)
-#   
+#
 # define TEST_CASE(Name)                                                                                \
     void Name();                                                                                        \
     static void RAPID_CXX_TEST_PP_CAT(Name, _invoker)()                                                 \
@@ -78,7 +77,7 @@ namespace Name                                                      \
     void Name()
 #
 # else /* __clang__ */
-#   
+#
 # define TEST_CASE(Name)                                                                                \
     void Name();                                                                                        \
     static void RAPID_CXX_TEST_PP_CAT(Name, _invoker)()                                                 \
@@ -113,7 +112,7 @@ namespace Name                                                      \
         ::rapid_cxx_test::get_reporter().report(m_f);                                       \
         return;                                                                             \
     } while (false)
-# 
+#
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -131,7 +130,7 @@ namespace Name                                                      \
         }                                                                              \
         ::rapid_cxx_test::get_reporter().report(m_f);                                  \
     } while (false)
-# 
+#
 
 # define TEST_CHECK(...)                                                               \
     do {                                                                               \
@@ -162,8 +161,8 @@ namespace Name                                                      \
             return;                                                                    \
         }                                                                              \
     } while (false)
-# 
-    
+#
+
 # define TEST_ASSERT(...)                                                              \
     do {                                                                               \
         TEST_SET_CHECKPOINT();                                                         \
@@ -179,7 +178,7 @@ namespace Name                                                      \
             std::abort();                                                              \
         }                                                                              \
     } while (false)
-# 
+#
 
 ////////////////////////////////////////////////////////////////////////////////
 //                    TEST_WARN_NO_THROW / TEST_WARN_THROW
@@ -198,7 +197,7 @@ namespace Name                                                      \
         }                                                                              \
         ::rapid_cxx_test::get_reporter().report(m_f);                                  \
     } while (false)
-# 
+#
 
 # define TEST_WARN_THROW(Except, ...)                                                  \
     do {                                                                               \
@@ -213,7 +212,7 @@ namespace Name                                                      \
         } catch (Except const &) {}                                                    \
         ::rapid_cxx_test::get_reporter().report(m_f);                                  \
     } while (false)
-# 
+#
 
 ////////////////////////////////////////////////////////////////////////////////
 //                    TEST_CHECK_NO_THROW / TEST_CHECK_THROW
@@ -247,8 +246,7 @@ namespace Name                                                      \
         } catch (Except const &) {}                                                    \
         ::rapid_cxx_test::get_reporter().report(m_f);                                  \
     } while (false)
-# 
-
+#
 
 ////////////////////////////////////////////////////////////////////////////////
 //                    TEST_REQUIRE_NO_THROW / TEST_REQUIRE_THROWs
@@ -288,7 +286,7 @@ namespace Name                                                      \
             return;                                                                    \
         }                                                                              \
     } while (false)
-# 
+#
 
 ////////////////////////////////////////////////////////////////////////////////
 //                    TEST_ASSERT_NO_THROW / TEST_ASSERT_THROW
@@ -311,7 +309,6 @@ namespace Name                                                      \
         }                                                                              \
     } while (false)
 #
-
 
 # define TEST_ASSERT_THROW(Except, ...)                                                \
     do {                                                                               \
@@ -361,7 +358,7 @@ namespace Name                                                      \
         }                                                                              \
         ::rapid_cxx_test::get_reporter().report(m_f);                                  \
     } while (false)
-# 
+#
 
 # define TEST_REQUIRE_EQUAL_COLLECTIONS(...)                                           \
     do {                                                                               \
@@ -378,7 +375,7 @@ namespace Name                                                      \
             return;                                                                    \
         }                                                                              \
     } while (false)
-# 
+#
 
 # define TEST_ASSERT_EQUAL_COLLECTIONS(...)                                            \
     do {                                                                               \
@@ -396,7 +393,7 @@ namespace Name                                                      \
         }                                                                              \
     } while (false)
 #
-    
+
 ////////////////////////////////////////////////////////////////////////////////
 //                            TEST_STATIC_ASSERT
 ////////////////////////////////////////////////////////////////////////////////
